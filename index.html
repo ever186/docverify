@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +11,10 @@
 </head>
 <body>
 
-  <!-- GRID BACKGROUND -->
+  <!-- CANVAS PARTÍCULAS -->
+  <canvas id="particles"></canvas>
+
+  <!-- GRID + GLOW -->
   <div class="bg-grid"></div>
   <div class="bg-glow"></div>
 
@@ -30,9 +33,27 @@
           <p class="site-sub">Verificador de coherencia</p>
         </div>
       </div>
-      <div class="header-badge">
-        <span class="badge-dot"></span>
-        <span>LOCAL · SEGURO</span>
+      <div class="header-right">
+        <div class="header-badge">
+          <span class="badge-dot"></span>
+          <span>LOCAL · SEGURO</span>
+        </div>
+        <!-- BOTÓN TEMA -->
+        <button class="btn-theme" id="btnTheme" title="Cambiar tema">
+          <span class="icon-dark">
+            <!-- Luna -->
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M13.5 10.5A6 6 0 015.5 2.5a6 6 0 108 8z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="icon-light">
+            <!-- Sol -->
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
       </div>
     </header>
 
@@ -71,46 +92,27 @@
       <section class="card params-card">
         <div class="card-label">02 / PARÁMETROS</div>
         <div class="params-grid">
-
           <div class="field">
             <label class="field-label" for="inputTitulo">
               <span class="field-num">A</span> Título de la tarea
             </label>
-            <input
-              class="field-input"
-              id="inputTitulo"
-              type="text"
-              placeholder=""
-              autocomplete="off"
-            />
+            <input class="field-input" id="inputTitulo" type="text"
+              placeholder="Ej: 12345 - Nombre de la aplicación" autocomplete="off"/>
           </div>
-
           <div class="field">
             <label class="field-label" for="inputId">
-              <span class="field-num">B</span> tarea
+              <span class="field-num">B</span> ID de la tarea (Azure)
             </label>
-            <input
-              class="field-input"
-              id="inputId"
-              type="text"
-              placeholder=""
-              autocomplete="off"
-            />
+            <input class="field-input" id="inputId" type="text"
+              placeholder="Ej: 123456" autocomplete="off"/>
           </div>
-
           <div class="field">
             <label class="field-label" for="inputConsecutivo">
               <span class="field-num">C</span> Consecutivo
             </label>
-            <input
-              class="field-input"
-              id="inputConsecutivo"
-              type="text"
-              placeholder=""
-              autocomplete="off"
-            />
+            <input class="field-input" id="inputConsecutivo" type="text"
+              placeholder="Ej: CSI-001" autocomplete="off"/>
           </div>
-
         </div>
       </section>
 
@@ -140,8 +142,6 @@
       <!-- RESULTS -->
       <section class="results-section" id="resultsSection" style="display:none">
         <div class="card-label">03 / RESULTADOS</div>
-
-        <!-- Summary bar -->
         <div class="summary-bar" id="summaryBar">
           <div class="summary-chip ok-chip">
             <span class="chip-icon">✔</span>
@@ -160,10 +160,7 @@
           </div>
           <div class="summary-verdict" id="verdict"></div>
         </div>
-
-        <!-- Result blocks -->
         <div class="result-blocks" id="resultBlocks"></div>
-
       </section>
 
     </main>

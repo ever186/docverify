@@ -1,5 +1,4 @@
 /**
- * app.js — DocVerify · NTT Data
  * Lógica del cliente: upload, validación, llamada a API, render de resultados
  */
 

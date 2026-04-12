@@ -1,10 +1,11 @@
 /**
+ * app.js — DocVerify
  * Lógica del cliente: upload, validación, llamada a API, render de resultados
  */
 
 // ── CONFIG ───────────────────────────────────────
 // En producción apunta a tu backend en Render
-const API_URL = window.DOCVERIFY_API_URL || 'https://docverify-api.onrender.com';
+const API_URL = 'https://docverify-api.onrender.com';
 
 // ── DOM REFS ─────────────────────────────────────
 const dropArea       = document.getElementById('dropArea');
@@ -277,3 +278,115 @@ function showToast(msg) {
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => toast.classList.remove('show'), 4000);
 }
+
+// ═══════════════════════════════════════════════
+// TEMA OSCURO / CLARO
+// ═══════════════════════════════════════════════
+const btnTheme = document.getElementById('btnTheme');
+const html     = document.documentElement;
+
+// Recuperar tema guardado
+const savedTheme = localStorage.getItem('dv-theme') || 'dark';
+html.setAttribute('data-theme', savedTheme);
+
+btnTheme.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  const next    = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('dv-theme', next);
+  // Actualizar color de partículas al cambiar tema
+  initParticles();
+});
+
+// ═══════════════════════════════════════════════
+// PARTÍCULAS ANIMADAS EN CANVAS
+// ═══════════════════════════════════════════════
+const canvas = document.getElementById('particles');
+const ctx    = canvas.getContext('2d');
+let particles = [];
+let animFrame;
+
+function getParticleColor() {
+  const theme = html.getAttribute('data-theme');
+  return theme === 'light'
+    ? 'rgba(124,58,237,'    // morado
+    : 'rgba(0,255,179,';    // verde neón
+}
+
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function randomBetween(a, b) {
+  return a + Math.random() * (b - a);
+}
+
+function createParticle() {
+  return {
+    x:      randomBetween(0, canvas.width),
+    y:      randomBetween(0, canvas.height),
+    r:      randomBetween(1.5, 4),
+    dx:     randomBetween(-0.4, 0.4),
+    dy:     randomBetween(-0.5, -0.1),   // suben suavemente
+    alpha:  randomBetween(0.2, 0.7),
+    dalpha: randomBetween(-0.003, 0.003), // parpadeo suave
+    pulse:  randomBetween(0, Math.PI * 2),
+  };
+}
+
+function initParticles() {
+  cancelAnimationFrame(animFrame);
+  particles = Array.from({ length: 55 }, createParticle);
+  animate();
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const colorBase = getParticleColor();
+
+  for (const p of particles) {
+    // Movimiento
+    p.x += p.dx;
+    p.y += p.dy;
+    p.pulse += 0.02;
+
+    // Parpadeo suave con seno
+    const a = p.alpha + Math.sin(p.pulse) * 0.15;
+    const clampedA = Math.max(0.05, Math.min(0.85, a));
+
+    // Resetear si sale por arriba
+    if (p.y < -10) {
+      p.y = canvas.height + 10;
+      p.x = randomBetween(0, canvas.width);
+    }
+    if (p.x < -10) p.x = canvas.width + 10;
+    if (p.x > canvas.width + 10) p.x = -10;
+
+    // Dibujar punto con halo
+    ctx.beginPath();
+    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+    gradient.addColorStop(0,   `${colorBase}${clampedA})`);
+    gradient.addColorStop(0.4, `${colorBase}${clampedA * 0.4})`);
+    gradient.addColorStop(1,   `${colorBase}0)`);
+    ctx.fillStyle = gradient;
+    ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Punto sólido central
+    ctx.beginPath();
+    ctx.fillStyle = `${colorBase}${clampedA})`;
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  animFrame = requestAnimationFrame(animate);
+}
+
+// Init
+resize();
+window.addEventListener('resize', () => {
+  resize();
+  initParticles();
+});
+initParticles();

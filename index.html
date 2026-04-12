@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DocVerify — NTT Data</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- GRID BACKGROUND -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div class="layout">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo-mark">
+          <span class="logo-bracket">[</span>
+          <span class="logo-text">DV</span>
+          <span class="logo-bracket">]</span>
+        </div>
+        <div class="header-titles">
+          <h1 class="site-title">DocVerify</h1>
+          <p class="site-sub">Verificador de coherencia · NTT Data</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="badge-dot"></span>
+        <span>LOCAL · SEGURO</span>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- UPLOAD ZONE -->
+      <section class="card upload-card" id="uploadZone">
+        <div class="card-label">01 / DOCUMENTO</div>
+        <div class="drop-area" id="dropArea">
+          <div class="drop-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="8" y="4" width="24" height="32" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 12h24" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M15 20h10M15 26h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M24 4v8h8" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <p class="drop-title">Arrastra tu archivo <span class="accent">.docx</span></p>
+          <p class="drop-sub">o haz clic para seleccionar</p>
+          <input type="file" id="fileInput" accept=".docx" hidden />
+        </div>
+        <div class="file-info" id="fileInfo" style="display:none">
+          <div class="file-chip">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="2" y="1" width="10" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M4 5h6M4 7.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span id="fileName">—</span>
+          </div>
+          <button class="btn-clear" id="btnClear" title="Quitar archivo">✕</button>
+        </div>
+      </section>
+
+      <!-- PARAMS -->
+      <section class="card params-card">
+        <div class="card-label">02 / PARÁMETROS</div>
+        <div class="params-grid">
+
+          <div class="field">
+            <label class="field-label" for="inputTitulo">
+              <span class="field-num">A</span> Título de la tarea
+            </label>
+            <input
+              class="field-input"
+              id="inputTitulo"
+              type="text"
+              placeholder="Ej: 12345 - Nombre de la aplicación"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="inputId">
+              <span class="field-num">B</span> ID de la tarea (Azure)
+            </label>
+            <input
+              class="field-input"
+              id="inputId"
+              type="text"
+              placeholder="Ej: 123456"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="inputConsecutivo">
+              <span class="field-num">C</span> Consecutivo
+            </label>
+            <input
+              class="field-input"
+              id="inputConsecutivo"
+              type="text"
+              placeholder="Ej: CSI-001"
+              autocomplete="off"
+            />
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ACTION -->
+      <div class="action-row">
+        <button class="btn-verify" id="btnVerify" disabled>
+          <span class="btn-idle">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Verificar documento
+          </span>
+          <span class="btn-loading" style="display:none">
+            <span class="spinner"></span>
+            Verificando…
+          </span>
+        </button>
+        <p class="privacy-note">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 1L1.5 3v3c0 2.5 2 4.5 4.5 5 2.5-.5 4.5-2.5 4.5-5V3L6 1z" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          El documento se procesa en el servidor y se elimina inmediatamente
+        </p>
+      </div>
+
+      <!-- RESULTS -->
+      <section class="results-section" id="resultsSection" style="display:none">
+        <div class="card-label">03 / RESULTADOS</div>
+
+        <!-- Summary bar -->
+        <div class="summary-bar" id="summaryBar">
+          <div class="summary-chip ok-chip">
+            <span class="chip-icon">✔</span>
+            <span id="countOk">0</span>
+            <span class="chip-label">OK</span>
+          </div>
+          <div class="summary-chip warn-chip">
+            <span class="chip-icon">⚠</span>
+            <span id="countWarn">0</span>
+            <span class="chip-label">Alertas</span>
+          </div>
+          <div class="summary-chip err-chip">
+            <span class="chip-icon">✘</span>
+            <span id="countErr">0</span>
+            <span class="chip-label">Errores</span>
+          </div>
+          <div class="summary-verdict" id="verdict"></div>
+        </div>
+
+        <!-- Result blocks -->
+        <div class="result-blocks" id="resultBlocks"></div>
+
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <span>DocVerify · NTT Data Security</span>
+      <span class="footer-sep">·</span>
+      <span>Procesamiento local — sin retención de datos</span>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
